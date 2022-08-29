@@ -11,8 +11,9 @@ from wtforms.validators import InputRequired
 import shutil
 
 app = Flask(__name__)
-SECRET_KEY = os.urandom(32)
-app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SECRET_KEY'] = os.environ.get('SECURE_KEY')
+key = os.environ.get('SECURE_KEY')
+print(key)
 app.config['UPLOAD_FOLDER'] = 'static/files'
 
 def speed_change(sound, speed=1.0):

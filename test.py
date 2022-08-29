@@ -1,2 +1,3 @@
 import os
-os.remove("static/files/audio.wav")
+key = os.environ.get('SECURE_KEY')
+print(key)
