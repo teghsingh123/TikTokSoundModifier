@@ -2,4 +2,9 @@
 2. Polish up the page
 3. Create a custom audio player rather than the original html audio player design
 
-https://github.com/teghsingh123/TikTokSoundModifier.git
+
+- git init
+- git add .
+- git commit -m "comment"
+- git add remote origin https://github.com/teghsingh123/TikTokSoundModifier.git
+- git push -u origin master 
