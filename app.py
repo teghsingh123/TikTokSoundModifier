@@ -10,23 +10,14 @@ from werkzeug.utils import secure_filename
 from wtforms.validators import InputRequired
 import shutil
 
+#other scripts
+from static.scripts.speedchange import checkfiletype, speed_change, createaudiosegment
+#from static.scripts.detectfiletype import filetype
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECURE_KEY')
-key = os.environ.get('SECURE_KEY')
-print(key)
+SECRET_KEY = 'Tegh'
+app.config['SECRET_KEY'] = SECRET_KEY
 app.config['UPLOAD_FOLDER'] = 'static/files'
-
-def speed_change(sound, speed=1.0):
-    # Manually override the frame_rate. This tells the computer how many
-    # samples to play per second
-    sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
-         "frame_rate": int(sound.frame_rate * speed)
-      })
-     # convert the sound with altered frame rate to a standard frame rate
-     # so that regular playback programs will work right. They often only
-     # know how to play audio at standard frame rate (like 44.1k)
-    return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
-
 
 class UploadFileForm(FlaskForm):
     file = FileField("File", validators=[InputRequired()])
@@ -52,25 +43,20 @@ def upload():
         os.remove("static/files/audio.wav")
     except OSError:
         pass
-    return render_template("input.html",form=form )
+    try:
+        os.remove("static/scripts/__pycache__")
+    except OSError:
+        pass
+    return render_template("input.html",form=form)
 
 #work on fixing the file not found issue.
 
 @app.route("/modify")
 def modify():
 
-    spedup = AudioSegment.from_wav("./static/files/audio.wav")
-    spedup = speed_change(spedup, 1.5)
-    spedup.export("spedupaudio.wav", format="wav")
-    spedup = "spedupaudio.wav"
-    shutil.move("spedupaudio.wav", "static/files")
+    createaudiosegment("spedupaudio", "static\\files\\audio.wav",speed=1.5)
 
-
-    sloweddown = AudioSegment.from_wav("./static/files/audio.wav")
-    sloweddown = speed_change(sloweddown, 0.75)
-    sloweddown.export("sloweddownaudio.wav", format="wav")
-    sloweddown = "sloweddownaudio.wav"
-    shutil.move("sloweddownaudio.wav", "static/files")
+    createaudiosegment("sloweddownaudio", "static\\files\\audio.wav",speed=0.5)
 
     return render_template("buttons.html")
 
