@@ -33,11 +33,8 @@ def upload():
         return redirect(url_for("modify"))
     try:
         os.remove("static/files/spedupaudio.wav")
-        os.remove("static/files/sloweddownaudio.wav")
         os.remove("static/files/audio.wav")
-        os.remove("static/files/spedupaudio.mp3")
-        os.remove("static/files/sloweddownaudio.mp3")
-        os.remove("static/files/audio.mp3")
+        os.remove("static/files/sloweddownaudio.wav")
     except OSError:
         pass
 
@@ -54,8 +51,12 @@ def upload():
 @app.route("/modify")
 def modify():
 
-    spedupaudio = Audio("static/files/audio.wav", 1.5, "spedupaudio.wav")
-    sloweddownaudio = Audio("static/files/audio.wav", 0.5, "sloweddownaudio.wav")
+    spedupaudio = Audio("static\\files\\audio.wav", 1.5, "spedupaudio.wav")
+    sloweddownaudio = Audio("static\\files\\audio.wav", 0.5, "sloweddownaudio.wav")
+
+    #createaudiosegment("spedupaudio", "static\\files\\audio.wav",speed=1.5)
+
+    #createaudiosegment("sloweddownaudio", "static\\files\\audio.wav",speed=0.5)
 
     return render_template("buttons.html")
 

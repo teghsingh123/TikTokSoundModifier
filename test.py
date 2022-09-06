@@ -1,4 +1,4 @@
 from static.scripts.speedchange import Audio
 
-#sound = Audio("audio.wav", 1.5,"spedupaudio.wav")
-del(round)
+#spedupaudio = Audio("audio.wav", 1.5, "spedupaudio.wav")
+del(spedupaudio)
