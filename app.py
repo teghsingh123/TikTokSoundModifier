@@ -11,7 +11,7 @@ from wtforms.validators import InputRequired
 import shutil
 
 #other scripts
-from static.scripts.speedchange import checkfiletype, speed_change, createaudiosegment
+from static.scripts.speedchange import Audio
 #from static.scripts.detectfiletype import filetype
 
 app = Flask(__name__)
@@ -33,20 +33,20 @@ def upload():
         return redirect(url_for("modify"))
     try:
         os.remove("static/files/spedupaudio.wav")
-    except OSError:
-        pass
-    try:
         os.remove("static/files/sloweddownaudio.wav")
-    except OSError:
-        pass
-    try:
         os.remove("static/files/audio.wav")
+        os.remove("static/files/spedupaudio.mp3")
+        os.remove("static/files/sloweddownaudio.mp3")
+        os.remove("static/files/audio.mp3")
     except OSError:
         pass
+
     try:
-        os.remove("static/scripts/__pycache__")
-    except OSError:
+        del(spedupaudio)
+        del(sloweddownaudio)
+    except NameError:
         pass
+
     return render_template("input.html",form=form)
 
 #work on fixing the file not found issue.
@@ -54,9 +54,8 @@ def upload():
 @app.route("/modify")
 def modify():
 
-    createaudiosegment("spedupaudio", "static\\files\\audio.wav",speed=1.5)
-
-    createaudiosegment("sloweddownaudio", "static\\files\\audio.wav",speed=0.5)
+    spedupaudio = Audio("static/files/audio.wav", 1.5, "spedupaudio.wav")
+    sloweddownaudio = Audio("static/files/audio.wav", 0.5, "sloweddownaudio.wav")
 
     return render_template("buttons.html")
 

@@ -1,10 +1,4 @@
-from static.scripts.speedchange import checkfiletype, speed_change,createaudiosegment
-from pydub import AudioSegment
-import shutil
+from static.scripts.speedchange import Audio
 
-sound = checkfiletype("audio.wav")
-
-if checkfiletype("audio.wav") == "wav":
-    print("the file type is a wav file")
-
-createaudiosegment("spedupaudio", "static\\files\\audio.wav",speed=1.5)
+#sound = Audio("audio.wav", 1.5,"spedupaudio.wav")
+del(round)

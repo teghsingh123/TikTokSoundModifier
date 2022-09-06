@@ -1,25 +1,29 @@
-from unicodedata import name
+import os
 from pydub import AudioSegment
 import shutil
 
-def checkfiletype(sound):
-    filetype = sound.split(".")[1]
-    return filetype
+class Audio:
+    def __init__(self,baseAudio:str,speed:float,nameForAudio:str):
+        self.baseaudio = baseAudio
+        self.speed = speed
+        self.name = nameForAudio
+        self.detectfiletype()
+        self.createAudioSegment()
 
-def speed_change(soundsegment, speed):
-    # Manually override the frame_rate. This tells the computer how many
-    # samples to play per second
+    def detectfiletype(self):
+        self.basefiletype = os.path.splitext(self.baseaudio)[1]
+        return self.basefiletype
+    
+    def speedchange(self,soundsegment):
+        sound_with_altered_frame_rate = soundsegment._spawn(soundsegment.raw_data, overrides = {
+            "frame_rate": int(soundsegment.frame_rate * self.speed)
+        })
 
-    sound_with_altered_frame_rate = soundsegment._spawn(soundsegment.raw_data, overrides={
-         "frame_rate": int(soundsegment.frame_rate * speed)
-      })
-     # convert the sound with altered frame rate to a standard frame rate
-     # so that regular playback programs will work right. They often only
-     # know how to play audio at standard frame rate (like 44.1k)
-    return sound_with_altered_frame_rate.set_frame_rate(soundsegment.frame_rate)
+        return sound_with_altered_frame_rate.set_frame_rate(soundsegment.frame_rate)
 
-def createaudiosegment(nameforaudiowithoutfiletype,path,speed):
-    nameforaudiosegment = AudioSegment.from_wav(path)
-    nameforaudiosegment = speed_change(nameforaudiosegment,speed)
-    nameforaudiosegment.export(nameforaudiowithoutfiletype + ".wav",format = "wav")
-    shutil.move(nameforaudiowithoutfiletype + ".wav", "static/files")
+    def createAudioSegment(self):
+        if self.basefiletype == ".wav":
+            nameforaudiosegment = AudioSegment.from_wav(self.baseaudio)
+            nameforaudiosegment = self.speedchange(nameforaudiosegment)
+            nameforaudiosegment.export(self.name, format = str(os.path.splitext(self.name)[1]).replace(".",""))
+            shutil.move(self.name, "static/files")
